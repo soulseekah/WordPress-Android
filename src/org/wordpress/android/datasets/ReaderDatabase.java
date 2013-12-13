@@ -9,6 +9,12 @@ import android.os.Build;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.ReaderLog;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 /**
  * Created by nbradbury on 6/22/13.
  * database for all reader information
@@ -161,5 +167,28 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         }.start();
     }
 
+    /*
+     * nbradbury - used during development to copy database to SD card so we can access it via DDMS
+     */
+    public static void copyDatabase() {
+        String copyFrom = getWritableDb().getPath();
+        String copyTo = WordPress.getContext().getExternalFilesDir(null).getAbsolutePath() + "/" + DB_NAME;
+
+        try {
+            InputStream input = new FileInputStream(copyFrom);
+            OutputStream output = new FileOutputStream(copyTo);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = input.read(buffer)) > 0)
+                output.write(buffer, 0, length);
+
+            output.flush();
+            output.close();
+            input.close();
+        } catch (IOException e) {
+            ReaderLog.e(e);
+        }
+    }
 
 }

@@ -8,6 +8,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -313,6 +314,13 @@ public class ReaderPost {
         if (TextUtils.isEmpty(featuredImageUrl))
             return null;
 
+        // if this is an mshots image, return the actual url without the query string (?h=x&w=x),
+        // and change it from https: to http: so it can be cached (it's only https because it's
+        // being returned by an authenticated REST endpoint - and these images are found only
+        // in FP posts)
+        if (PhotonUtils.isMShotsUrl(featuredImageUrl))
+            return UrlUtils.removeQuery(featuredImageUrl).replaceFirst("https", "http");
+
         if (featuredImageUrl.contains("imgpress")) {
             // parse the url parameter
             String actualImageUrl = Uri.parse(featuredImageUrl).getQueryParameter("url");
@@ -337,7 +345,7 @@ public class ReaderPost {
     }
 
     /*
-     * This gawdawful hack is necessary to get VideoPress videos to work in the Reader since the v1
+     * This is necessary to get VideoPress videos to work in the Reader since the v1
      * REST API returns VideoPress videos in a script block that relies on jQuery - which obviously
      * fails on mobile - here we extract the video thumbnail and insert a DIV at the top of the
      * post content which links the thumbnail IMG to the video so the user can tap the thumb to
@@ -543,7 +551,7 @@ public class ReaderPost {
                 // skip photon for https images since we can't authenticate them
                 featuredImageForDisplay = featuredImage;
             } else {
-                // not private or https, so set to correctly sized photon url
+                // not private so set to correctly sized photon url
                 featuredImageForDisplay = PhotonUtils.getPhotonImageUrl(featuredImage, width, height);
             }
         }
