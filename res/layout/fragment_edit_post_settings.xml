@@ -51,6 +51,11 @@
                 android:text="@string/edit" />
         </LinearLayout>
 
+        <CheckBox android:id="@+id/sticky"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/make_sticky" />
+
         <TextView
             android:id="@+id/postFormatLabel"
             style="@style/WordPressSubHeader"

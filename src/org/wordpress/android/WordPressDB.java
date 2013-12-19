@@ -65,7 +65,7 @@ public class WordPressDB {
             + "description text default '', link text default '', mt_allow_comments boolean, mt_allow_pings boolean, "
             + "mt_excerpt text default '', mt_keywords text default '', mt_text_more text default '', permaLink text default '', post_status text default '', userid integer default 0, "
             + "wp_author_display_name text default '', wp_author_id text default '', wp_password text default '', wp_post_format text default '', wp_slug text default '', mediaPaths text default '', "
-            + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text);";
+            + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text, sticky boolean);";
 
     private static final String CREATE_TABLE_COMMENTS = "create table if not exists comments (blogID text, postID text, iCommentID integer, author text, comment text, commentDate text, commentDateFormatted text, status text, url text, email text, postTitle text);";
     private static final String POSTS_TABLE = "posts";
@@ -897,6 +897,8 @@ public class WordPressDB {
                         } catch (Exception e) {
                             values.put("wp_post_format", "");
                         }
+
+                        values.put("sticky", ((Boolean) thisHash.get("sticky")) ? 1 : 0);
                     }
 
                     int result = db.update(POSTS_TABLE, values, "postID=" + postID
@@ -941,6 +943,7 @@ public class WordPressDB {
             values.put("longitude", post.getLongitude());
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getMt_excerpt());
+            values.put("sticky", post.isSticky());
 
             returnValue = db.insert(POSTS_TABLE, null, values);
 
@@ -986,6 +989,7 @@ public class WordPressDB {
             values.put("wp_post_format", post.getWP_post_format());
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getMt_excerpt());
+            values.put("sticky", post.isSticky());
 
             int pageInt = 0;
             if (post.isPage())
@@ -1096,6 +1100,7 @@ public class WordPressDB {
                 values.add(c.getInt(27));
                 values.add(c.getInt(28));
                 values.add(c.getInt(29));
+                values.add(c.getInt(31));
             }
         }
         c.close();

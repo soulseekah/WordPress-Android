@@ -43,6 +43,7 @@ public class Post implements Serializable {
     private String wp_author_id;
     private String wp_password;
     private String wp_post_format;
+    private boolean sticky;
     private String wp_slug;
     private boolean localDraft;
     private boolean uploaded;
@@ -100,6 +101,7 @@ public class Post implements Serializable {
             this.uploaded = (Integer) postVals.get(27) > 0;
             this.isPage = (Integer) postVals.get(28) > 0;
             this.isLocalChange = (Integer) postVals.get(29) > 0;
+            this.sticky = (Integer) postVals.get(30) > 0;
         } else {
             this.id = -1;
         }
@@ -389,6 +391,14 @@ public class Post implements Serializable {
         this.uploaded = uploaded;
     }
 
+    public boolean isSticky() {
+        return sticky;
+    }
+
+    public void setSticky(boolean sticky) {
+        this.sticky = sticky;
+    }
+
     public boolean isLocalChange() {
         return isLocalChange;
     }
@@ -460,7 +470,8 @@ public class Post implements Serializable {
                 this.wp_password.equals(otherPost.wp_password) &&
                 this.wp_post_format.equals(otherPost.wp_post_format) &&
                 this.latitude == otherPost.latitude &&
-                this.longitude == otherPost.longitude)
+                this.longitude == otherPost.longitude &&
+                this.sticky == otherPost.sticky)
         );
     }
 

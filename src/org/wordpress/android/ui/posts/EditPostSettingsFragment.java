@@ -23,6 +23,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -71,6 +72,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
     private Spinner mStatusSpinner;
     private EditText mPasswordEditText, mTagsEditText, mExcerptEditText;
     private TextView mLocationText, mPubDateText;
+    private CheckBox mSticky;
     private ViewGroup mSectionCategories;
 
     private ArrayList<String> mCategories;
@@ -112,6 +114,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         mLocationText = (TextView) rootView.findViewById(R.id.locationText);
         Button mPubDateButton = (Button) rootView.findViewById(R.id.pubDateButton);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
+        mSticky = (CheckBox) rootView.findViewById(R.id.sticky);
         mStatusSpinner = (Spinner) rootView.findViewById(R.id.status);
         mTagsEditText = (EditText) rootView.findViewById(R.id.tags);
         mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
@@ -132,6 +135,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             (rootView.findViewById(R.id.sectionLocation)).setVisibility(View.GONE);
             (rootView.findViewById(R.id.postFormatLabel)).setVisibility(View.GONE);
             (rootView.findViewById(R.id.postFormat)).setVisibility(View.GONE);
+            (rootView.findViewById(R.id.sticky)).setVisibility(View.GONE);
         } else {
             mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
             mPostFormats = new String[] {"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard", "status", "video"};
@@ -263,6 +267,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                     setLocationStatus(LocationStatus.SEARCHING);
                     new GetAddressTask().execute(latitude, longitude);
                 }
+
+                mSticky.setChecked(post.isSticky());
             }
             String tags = post.getMt_keywords();
             if (!tags.equals("")) {
@@ -475,6 +481,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         post.setJSONCategories(new JSONArray(mCategories));
         post.setMt_keywords(tags);
         post.setPost_status(status);
+        post.setSticky(mSticky.isChecked());
         post.setWP_password(password);
         post.setLatitude(latitude);
         post.setLongitude(longitude);

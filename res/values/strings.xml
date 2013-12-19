@@ -431,6 +431,9 @@
     <string name="published">Published</string>
     <string name="scheduled">Scheduled</string>
 
+    <!-- post stickiness -->
+    <string name="make_sticky">Make this post sticky</string>
+
     <!-- QuickPress -->
     <string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
     <string name="quickpress_add_error">Shortcut name can\'t be empty</string>

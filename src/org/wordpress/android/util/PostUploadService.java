@@ -365,6 +365,8 @@ public class PostUploadService extends Service {
 
                     contentStruct.put("custom_fields", geo);
                 }
+
+                contentStruct.put("sticky", post.isSticky());
             }
 
             // featured image
